@@ -1,0 +1,119 @@
+import streamlit as st
+import pandas as pd
+import joblib
+import os
+import numpy as np
+from PIL import Image
+
+# --- Page Configuration ---
+st.set_page_config(
+    page_title="PhD-Level Tabular AI Demo",
+    page_icon="🧠",
+    layout="wide"
+)
+
+st.title("🧠 PhD-Level Tabular AI Demo")
+st.markdown("This demo showcases **end-to-end tabular AI development**, from prediction to explainability and model evaluation.")
+
+# --- Sidebar Navigation ---
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to:", ["📤 Upload & Predict", "🧩 Model Explanation", "🎯 Model Performance"])
+
+# --- Load model ---
+model_path = "../artifacts/best_model.pkl"
+if os.path.exists(model_path):
+    model = joblib.load(model_path)
+else:
+    st.error("❌ Model file not found. Please train the model first.")
+    st.stop()
+
+
+# =====================================================
+# 📤 PAGE 1: UPLOAD & PREDICT
+# =====================================================
+if page == "📤 Upload & Predict":
+    st.subheader("📄 Upload CSV for Prediction")
+    uploaded = st.file_uploader("Upload a CSV file", type=["csv"])
+
+    if uploaded:
+        df = pd.read_csv(uploaded)
+        preds = model.predict(df)
+        df["Prediction"] = preds
+
+        st.success("✅ Predictions completed!")
+        st.dataframe(df.head(20))
+
+        st.write(f"**Total Samples:** {len(preds)}")
+        st.write(f"**Predicted Class ‘1’ (Positive):** {np.sum(preds == 1)}")
+        st.write(f"**Predicted Class ‘0’ (Negative):** {np.sum(preds == 0)}")
+
+        # --- Download predictions ---
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="💾 Download Full Predictions",
+            data=csv,
+            file_name="predictions.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("Please upload a CSV file to get predictions.")
+
+
+# =====================================================
+# 🧠 PAGE 2: MODEL EXPLANATION (SHAP)
+# =====================================================
+elif page == "🧩 Model Explanation":
+    st.subheader("🧠 Model Explanation (XAI – SHAP)")
+    st.markdown("This section provides explainability visualization for the trained model using **SHAP** and fallback feature importances.")
+
+    shap_path = "../figures/shap_summary.png"
+    fallback_path = "../figures/shap_summary_fallback.png"
+
+    if os.path.exists(shap_path):
+        st.image(Image.open(shap_path), caption="SHAP Summary (Feature Impact)", use_container_width=True)
+        st.success("✅ SHAP summary visualization loaded successfully.")
+    elif os.path.exists(fallback_path):
+        st.image(Image.open(fallback_path), caption="Fallback: Feature Importance Plot", use_container_width=True)
+        st.warning("⚠️ SHAP not supported for this model; fallback visualization shown.")
+    else:
+        st.info("No SHAP visualization found. Please run the notebook to generate SHAP figures first.")
+
+    st.markdown("---")
+    st.markdown("**Model Information:**")
+    st.code(str(model))
+
+
+# =====================================================
+# 🎯 PAGE 3: MODEL PERFORMANCE
+# =====================================================
+elif page == "🎯 Model Performance":
+    st.subheader("📊 Model Evaluation Metrics")
+    st.markdown("Here you can review performance metrics generated during training (Confusion Matrix, ROC Curve, Learning Curve).")
+
+    # Paths to figures
+    cm_path = "../figures/confusion_matrix.png"
+    roc_path = "../figures/roc_curve.png"
+    lc_path = "../figures/learning_curve.png"
+
+    cols = st.columns(3)
+
+    with cols[0]:
+        if os.path.exists(cm_path):
+            st.image(Image.open(cm_path), caption="Confusion Matrix", use_container_width=True)
+        else:
+            st.info("Confusion Matrix not found.")
+
+    with cols[1]:
+        if os.path.exists(roc_path):
+            st.image(Image.open(roc_path), caption="ROC Curve", use_container_width=True)
+        else:
+            st.info("ROC Curve not found.")
+
+    with cols[2]:
+        if os.path.exists(lc_path):
+            st.image(Image.open(lc_path), caption="Learning Curve", use_container_width=True)
+        else:
+            st.info("Learning Curve not found.")
+
+    st.markdown("---")
+    st.markdown("**Tip:** These visuals are automatically generated during notebook execution and saved under the `figures/` directory.")
