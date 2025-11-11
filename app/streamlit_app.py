@@ -5,16 +5,27 @@ import os
 import numpy as np
 from PIL import Image
 
+
+
+st.title("🧠 PhD-Level Tabular AI Demo")
+st.markdown("This demo showcases **end-to-end tabular AI development**, from prediction to explainability and model evaluation.")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "..", "artifacts", "best_model.pkl")
+MODEL_PATH = os.path.normpath(MODEL_PATH)
+
+if not os.path.exists(MODEL_PATH):
+    st.error(f"❌ Model file not found at: {MODEL_PATH}")
+else:
+    model = joblib.load(MODEL_PATH)
+    st.success("✅ Model loaded successfully.")
+
 # --- Page Configuration ---
 st.set_page_config(
     page_title="PhD-Level Tabular AI Demo",
     page_icon="🧠",
     layout="wide"
 )
-
-st.title("🧠 PhD-Level Tabular AI Demo")
-st.markdown("This demo showcases **end-to-end tabular AI development**, from prediction to explainability and model evaluation.")
-
 # --- Sidebar Navigation ---
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to:", ["📤 Upload & Predict", "🧩 Model Explanation", "🎯 Model Performance"])
