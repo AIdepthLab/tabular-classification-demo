@@ -45,7 +45,7 @@ if uploaded_file is not None:
         if model is not None:
             preds = model.predict(df)
             st.subheader("🔮 Predictions")
-            st.write(preds[:20])  # ilk 20 tahmini göster
+            st.write(preds[:50])  # ilk 20 tahmini göster
         else:
             st.error("❌ Model not loaded, please ensure model file exists in /artifacts.")
     except Exception as e:
