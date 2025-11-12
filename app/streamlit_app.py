@@ -57,3 +57,47 @@ with st.expander("🧩 Debug Info"):
     st.write("Model path:", MODEL_PATH)
     st.write("Files in artifacts:", os.listdir(os.path.join(BASE_DIR, "..", "artifacts")) if os.path.exists(os.path.join(BASE_DIR, "..", "artifacts")) else "❌ No artifacts folder found")
 
+
+# === Time Series Forecast Demo ===
+
+from sklearn.linear_model import LinearRegression
+import io
+
+st.markdown("---")
+st.header("📈 Time Series Forecast Demo")
+
+st.write("This demo shows a simple trend forecasting model using synthetic time series data.")
+
+# Model parametreleri (kullanıcı ayarları)
+n_points = st.slider("Number of data points", 50, 300, 100, step=10)
+noise_level = st.slider("Noise level", 0.0, 5.0, 2.0, step=0.5)
+split_ratio = st.slider("Train/Test split ratio", 0.5, 0.9, 0.8, step=0.05)
+
+# Demo başlat
+if st.button("Run Forecast Demo"):
+    np.random.seed(42)
+    t = np.arange(0, n_points)
+    y = 0.5 * t + 5 * np.sin(0.2 * t) + np.random.randn(n_points) * noise_level
+
+    split = int(n_points * split_ratio)
+    t_train, t_test = t[:split].reshape(-1, 1), t[split:].reshape(-1, 1)
+    y_train, y_test = y[:split], y[split:]
+
+    model = LinearRegression().fit(t_train, y_train)
+    y_pred = model.predict(t_test)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(t, y, label="Actual", color="steelblue", linewidth=2)
+    ax.plot(t_test.flatten(), y_pred, label="Predicted", color="darkorange", linewidth=2)
+    ax.set_title("Time Series Forecasting (Linear Regression)")
+    ax.set_xlabel("Time")
+    ax.set_ylabel("Value")
+    ax.legend()
+    ax.grid(True)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    st.pyplot(fig)
+
+    st.success("✅ Forecast completed!")
+    st.caption("Model: LinearRegression — demonstrates basic trend estimation on noisy synthetic data.")
