@@ -24,7 +24,7 @@ MODEL_PATH = os.path.normpath(MODEL_PATH)
 # === DEMO DATA ===
 st.subheader("Sample Dataset")
 demo_data = load_breast_cancer(as_frame=True)
-df_demo = demo_data.frame.head(10)
+df_demo = demo_data.frame.drop(columns=['target']).head(25)
 
 # Download button
 csv_bytes = df_demo.to_csv(index=False).encode()
