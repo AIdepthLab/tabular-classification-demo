@@ -35,8 +35,8 @@ demo_df = pd.DataFrame({"text": pos + neg, "label": [1]*50 + [0]*50})
 
 # Downloadable sample
 st.download_button(
-    "📄 Download Sample CSV",
-    demo_df.head(20).to_csv(index=False).encode(),
+    "📄 Download Sample CSV (100 balanced rows)",
+    demo_df.to_csv(index=False).encode(),
     file_name="sample_sentiment_data.csv",
     mime="text/csv"
 )
