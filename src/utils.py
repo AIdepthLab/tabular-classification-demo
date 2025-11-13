@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  6 21:57:54 2025
-
-@author: yakamoz
+@author: AIdepthLab
 """
 
 import os

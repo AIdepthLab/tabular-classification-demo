@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  6 21:59:35 2025
-
-@author: yakamoz
+@author: AIdepthLab
 """
 
 from sklearn.model_selection import GridSearchCV, StratifiedKFold

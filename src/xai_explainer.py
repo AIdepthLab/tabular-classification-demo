@@ -1,7 +1,6 @@
 """
 Explainable AI (XAI) utilities for tabular models (Pipeline-safe).
-Author: Ferhat Kılıç
-Updated: 2025-11-07
+Author: AIdepthLAb
 """
 
 import os
@@ -31,17 +30,17 @@ def shap_summary_plot(model, X, save_path: str, show=False):
     """Generate SHAP summary plot; supports Pipeline, tree, linear, and generic models."""
     path = safe_save_path(save_path)
 
-    print("🔍 Starting SHAP analysis...")
+    print("Starting SHAP analysis...")
     print(f"Model type: {type(model).__name__}")
 
     # --- Handle sklearn Pipeline: unwrap the final estimator
     if isinstance(model, Pipeline):
-        print("🧩 Detected Pipeline. Extracting final estimator...")
+        print("Detected Pipeline. Extracting final estimator...")
         try:
             model_inner = model.steps[-1][1]
             print(f"➡️ Inner model: {type(model_inner).__name__}")
         except Exception as e:
-            print(f"⚠️ Could not extract inner model: {e}")
+            print(f"Could not extract inner model: {e}")
             model_inner = model
     else:
         model_inner = model
@@ -53,17 +52,17 @@ def shap_summary_plot(model, X, save_path: str, show=False):
     try:
         # --- Tree-based models
         if hasattr(model_inner, "feature_importances_"):
-            print("🌲 Using TreeExplainer")
+            print("Using TreeExplainer")
             explainer = shap.TreeExplainer(model_inner)
             shap_values = explainer(X)
         # --- Linear models
         elif hasattr(model_inner, "coef_"):
-            print("📈 Using LinearExplainer")
+            print("Using LinearExplainer")
             explainer = shap.LinearExplainer(model_inner, X)
             shap_values = explainer(X)
         # --- Generic (e.g. MLP)
         else:
-            print("🧠 Using KernelExplainer (generic)")
+            print("Using KernelExplainer (generic)")
             if hasattr(model_inner, "predict_proba"):
                 background = shap.sample(X, 50, random_state=42)
                 explainer = shap.KernelExplainer(model_inner.predict_proba, background)
@@ -72,7 +71,7 @@ def shap_summary_plot(model, X, save_path: str, show=False):
                 raise ValueError("Model has no predict_proba method")
 
         # --- Plot SHAP summary
-        print("📊 Generating SHAP summary plot...")
+        print("Generating SHAP summary plot...")
         shap.summary_plot(shap_values, X, show=False, plot_type="bar")
         plt.tight_layout()
         plt.savefig(path, dpi=300, bbox_inches="tight")
@@ -80,15 +79,15 @@ def shap_summary_plot(model, X, save_path: str, show=False):
             plt.show()
         else:
             plt.close()
-        print(f"✅ SHAP summary plot saved: {path}")
+        print(f"SHAP summary plot saved: {path}")
 
     except Exception as e:
-        print(f"⚠️ SHAP explanation failed: {e}")
-        print("🔁 Falling back to feature importance visualization...")
+        print(f"SHAP explanation failed: {e}")
+        print("Falling back to feature importance visualization...")
         try:
             feature_importances_plot(model_inner, X, path.replace(".png", "_fallback.png"))
         except Exception as e2:
-            print(f"❌ Fallback also failed: {e2}")
+            print(f"Fallback also failed: {e2}")
 
 
 def feature_importances_plot(model, X, save_path, show=False):
@@ -117,4 +116,4 @@ def feature_importances_plot(model, X, save_path, show=False):
         plt.show()
     else:
         plt.close()
-    print(f"✅ Fallback plot saved: {path}")
+    print(f"Fallback plot saved: {path}")
