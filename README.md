@@ -89,7 +89,7 @@ https://nbviewer.org/github/AidepthLab/tabular-classification-demo/blob/main/not
 https://colab.research.google.com/github/AidepthLab/tabular-classification-demo/blob/main/notebooks/03_nlp_sentiment.ipynb
 
 📂 Project Structure
-'''
+´´´
 tabular-classification-demo/
 │
 ├── app/                      # Streamlit applications
@@ -110,7 +110,7 @@ tabular-classification-demo/
 ├── Csv/                      # Demo CSV datasets
 │
 └── README.md
-'''
+´´´
 
 🧠 Tech Stack
 
@@ -158,6 +158,7 @@ Professional AI Solutions | Model Development | Data Science Consulting
 | ▶️ Notebook (Colab Run) Nlp Sentiment Analysis | https://colab.research.google.com/github/AidepthLab/tabular-classification-demo/blob/main/notebooks/03_nlp_sentiment.ipynb (#) |
 | 🌐 Streamlit Tabular AI Demo | https://tabular-classification-demo-j3pha8csvyed7mxxd4o8zj.streamlit.app (#) |
 | 🌐 Streamlit NLP Sentiment Analysis Demo | https://tabular-classification-demo-g7qfbsbxkvcuexbnkihr56.streamlit.app (#) |
+
 
 
 
