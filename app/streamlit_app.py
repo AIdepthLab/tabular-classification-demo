@@ -116,3 +116,8 @@ if st.button("Run Forecast Demo"):
 
     st.success("Forecast completed!")
     st.caption("Model: LinearRegression — demonstrates basic trend estimation on noisy synthetic data.")
+    
+    st.markdown(
+    "<p style='text-align:center; color: #888888; font-size: 15px;'>AIdepthLab • Machine Learning & Deep Learning</p>",
+    unsafe_allow_html=True
+)

@@ -92,3 +92,8 @@ ConfusionMatrixDisplay.from_predictions(y_test, y_pred, ax=ax_cm)
 st.pyplot(fig_cm)
 
 st.success("✅ Training & evaluation completed with stratified split on a balanced dataset.")
+
+st.markdown(
+    "<p style='text-align:center; color: #888888; font-size: 15px;'>AIdepthLab • Machine Learning & Deep Learning</p>",
+    unsafe_allow_html=True
+)
